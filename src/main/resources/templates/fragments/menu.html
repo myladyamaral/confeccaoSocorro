@@ -1,0 +1,39 @@
+<!-- resources/templates/fragments/menu.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<!-- Include Bootstrap CSS from CDN -->
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<!-- Include Bootstrap JS from CDN -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script
+	src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<div class="container" th:fragment = "menu" >
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+			<button class="navbar-toggler" type="button" data-toggle="collapse"
+				data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
+				aria-expanded="false" aria-label="Alterna navegação">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    			<div class="navbar-nav">
+	    			<a class="nav-item nav-link" href="/">HOME</a>
+	    			<a class="nav-item nav-link" href="/produto/cadastrar">Cadastrar</a>
+	    			<a class="nav-item nav-link" href="/produto/listar">Listar</a>
+	    			<a class="nav-item nav-link" th:href="@{movimento/entrada}">Nova Entrada</a>
+	    			<a class="nav-item nav-link" th:href="@{movimento/saida}">Nova Saida</a>
+	    			<a class="nav-item nav-link" href="/movimento/listar">Movimentação</a>
+	    			<a class="nav-item nav-link" href="/movimento/relatorio">Gerar Relatorio</a>
+    			</div>
+    		</div>
+		</nav>
+	</div>
+</body>
+
+</html>

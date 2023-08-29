@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+	<!-- Include Bootstrap CSS from CDN -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+	<!-- Include Bootstrap JS from CDN -->
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+	<header>
+		<div th:replace="~{'fragments/menu' :: menu}"></div>
+	</header>
+	<div class="container">
+		<div class="row justify-content-md-center">
+			<!-- 		Mensagem -->
+			<div id="alert-container" class="fixed-top px-3 py-2 mb-0" >
+					<div id="alert"
+						class="alert alert-success alert-dismissible fade show"
+						role="alert" th:if="${mensagem}">
+						<span  th:text="${mensagem}"></span>
+						<button type="button" class="close" data-dismiss="alert"
+							aria-label="Fechar">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+				</div>
+			<div class="col-md-auto">
+				<form action="#" th:action="@{/movimento/gerarRelatorio}"
+					 method="get">
+					 <div class="form-group">
+						<label for="descricao">Relatorio por: </label>
+						<select class="form-control" name="filtroReferencia" >
+							<option th:each="t : ${referencias}" th:value="${t.id}"
+								th:text="${t.descricao}"></option>
+						</select>
+					</div>
+					 <div class="form-group">
+						<input type="number" id="quantidade" class="form-control"  min="1" inputmode="numeric"
+							name="filtro" pattern="[0-9]+([\.,][0-9]+)?">
+					</div>
+					
+					
+					<button type="submit" class="btn btn-primary" >Buscar</button>
+				</form>
+			</div>
+			<div class="col-10">
+				<h2 align="center">Relatorio</h2>
+				
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th class="col-1">Codigo do produto</th>
+							<th class="col-1">Descrição</th>
+							<th class="col-1">Data</th>
+							<th class="col-1">Valor</th>
+							<th class="col-1">Quantidade</th>
+							<th class="col-1">Tipo</th>
+							<th class="col-1">Observação</th>
+							<th class="col-1"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="movimento : ${movimentos}">
+							<td th:text="${movimento.produto.id}"></td>
+							<td th:text="${movimento.produto.descricao}"></td>
+							<td th:text="${movimento.dataMovimento}"></td>
+							<td>R$<span th:text="${movimento.produto.valor}"></span></td>
+							<td><span th:text="${movimento.quantidade}"></span></td>
+							<td><span th:text="${movimento.tipoMovimento == 1?
+							 		'Entrada': 'Saída'}"></span>
+							 </td>
+							<td><span th:text="${movimento.estorno == true?'Operação Estornada': ''}"></span>
+							 	<span th:text="${movimento.idMovimentoEstornado == null?'': 'Estorno'}"></span>
+							 </td>
+							<td ><a th:unless="${movimento.estorno or movimento.idMovimentoEstornado != null}" 
+								class="btn btn-sm btn-primary" th:href="@{/movimento/estornar/{id}(id=${movimento.id})}" >Estornar</a>
+							</td>
+
+						</tr>
+						<tr class="table-info">
+							<td><strong>Entradas</strong></td>
+							<td><strong>Saidas</strong></td>
+							<td><strong>Total</strong></td>
+						</tr>
+						<tr class="table-info">
+							<td><span th:text="${entradas}"></span></td>
+							<td><span th:text="${saidas}"></span></td>
+							<td><span th:text="${total}"></span></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/js/bootstrap-datepicker.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.datepicker').datepicker({
+                format: 'dd/mm/yyyy', // Formato da data exibida
+                autoclose: true
+            });
+        });
+    </script>
+
+</body>
+</html>

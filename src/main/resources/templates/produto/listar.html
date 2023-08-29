@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+	<!-- Include Bootstrap CSS from CDN -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+	<!-- Include Bootstrap JS from CDN -->
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<header>
+		<div th:replace="~{'fragments/menu' :: menu}"></div>
+	</header>
+	<div class="container">
+		<div class="row justify-content-md-center">
+			<div class="col-md-auto">
+				<form action="#" th:action="@{/produto/buscar}"
+					 method="get">
+					 <div class="form-group">
+						<label for="nome">Produto: </label>
+						<input
+							type="text" class="form-control" id="nome"
+							name="filtroNome" >
+					</div>
+					<button type="submit" class="btn btn-primary" >Buscar</button>
+				</form>
+			</div>
+			<div class="col-10">
+				<h1>Controle de Estoque</h1>
+				
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th class="col-1">Codigo</th>
+							<th class="col-1">Estoque Mínimo</th>
+							<th class="col-2">Descrição</th>
+							<th class="col-1">Entradas</th>
+							<th class="col-1">Saídas</th>
+							<th class="col-1">Valor</th>
+							<th class="col-3">Saldo total do estoque</th>
+							<th class="col-1">Status</th>
+							<th class="col-1"></th>
+							<th class="col-1"></th>
+							<th class="col-1"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="produto : ${produtos}">
+							<td th:text="${produto.id}"></td>
+							<td th:text="${produto.estoqueMinimo}"></td>
+							<td th:text="${produto.descricao}"></td>
+							<td th:text="${produto.entradas}"></td>
+							<td th:text="${produto.saidas}"></td>
+							<td>R$<span th:text="${produto.valor}"></span></td>
+							<td th:text="${produto.totalEstoque}"></td>
+							<td th:text="${produto.estadoEstoque}"></td>
+							<td ><a class="btn btn-sm btn-primary" th:href="@{/produto/editar/{id}(id=${produto.id})}" >Editar</a></td>
+							<td ><a class="btn btn-sm btn-light" th:href="@{/produto/detalhar/{id}(id=${produto.id})}" >Detalhar</a></td>
+							<td ><a class="delete btn btn-sm btn-danger" th:href="@{/produto/deletarProduto/{id}(id=${produto.id})}">Excluir</a></td>
+						</tr>
+					</tbody>
+				</table>
+				<nav aria-label="Page navigation example">
+					<ul class="pagination">
+						<li class="page-item"><a class="page-link" href="#">Anterior</a></li>
+						<li class="page-item"><a class="page-link" href="#">1</a></li>
+						<li class="page-item"><a class="page-link" href="#">2</a></li>
+						<li class="page-item"><a class="page-link" href="#">3</a></li>
+						<li class="page-item"><a class="page-link" href="#">Próximo</a></li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

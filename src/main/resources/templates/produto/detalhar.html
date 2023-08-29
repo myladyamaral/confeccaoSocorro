@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Cadastro de Produto</title>
+	
+	<!-- Include Bootstrap CSS from CDN -->
+	<link rel="stylesheet"
+		href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<!-- Include Bootstrap JS from CDN -->
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+	
+	<header>
+		<div th:replace="~{'fragments/menu' :: menu}"></div>
+	</header>
+	
+	<div class="container">
+		<div class="row justify-content-md-center">
+			<div class="col-md-auto">
+				<header>
+					<h2>Detalhar Produto</h2>
+				</header>
+				<form action="#" th:action="@{/produto/listar}"
+					th:object="${produto}">
+					<!-- need to associate this data with produto id -->
+						<input type="hidden" th:field="*{id}" />
+					
+					<div class="form-row">
+						<div class="col">
+							<label for="descricao">Descricao:</label>
+						</div>
+						<div class="col">
+							<div id="descricao" th:utext="*{descricao}"></div>
+						</div>
+					</div>	
+					<div class="form-row">
+						<div class="col">
+							<label for="valor">Valor</label>
+						</div>
+						<div class="col">
+							<div id="valor" th:utext="*{valor}"></div>
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="col">
+							<label for="minEstoque">Estoque Minimo</label>
+						</div>
+						<div class="col">
+							<div id="minEstoque" th:utext="*{estoqueMinimo}"></div>
+						</div>
+					</div>
+
+					<button type="submit">Voltar</button>
+				</form>
+				Adicionar Tabela de movimentos de produto
+			</div>
+		</div>
+
+	</div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Cadastro de Produto</title>
+	
+	<!-- Include Bootstrap CSS from CDN -->
+	<link rel="stylesheet"
+		href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<!-- Include Bootstrap JS from CDN -->
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+	
+	<header>
+		<div th:replace="~{'fragments/menu' :: menu}"></div>
+	</header>
+	
+	<div class="container">
+		<div class="row justify-content-md-center">
+			<div class="col-md-auto">
+				<header>
+					<h2>Editar Produto</h2>
+					<div class="alert alert-success alert-dismissible fade show"
+						th:if="${mensagem}">
+						<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+						<span th:text="${mensagem}"></span>
+					</div>
+				</header>
+				<form action="#" th:action="@{/produto/cadastrar}"
+					th:object="${produto}" method="post">
+					<!-- need to associate this data with produto id -->
+						<input type="hidden" th:field="*{id}" />
+					
+					<div class="form-group">
+						<label for="descricao">Descricao</label> 
+						<input id="descricao" type="text" class="form-control"
+							th:field="*{descricao}" >
+						<div>
+							<span class="alert" th:if="${#fields.hasErrors('descricao')}"
+								th:errors="*{descricao}"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="valor">Valor</label> 
+						<input type="number" id="valor" class="form-control" placeholder="0,00" min="0.01" step="0.01"
+							th:field="*{valor}" pattern="[0-9]+([\.,][0-9]+)?" inputmode="decimal">
+						<div>
+							<span class="mensagem" th:if="${#fields.hasErrors('valor')}"
+								th:errors="*{valor}"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="minEstoque">Estoque Minimo</label> 
+						<input type="number" id="minEstoque" class="form-control" placeholder="1" min="1" inputmode="numeric"
+							th:field="*{estoqueMinimo}" pattern="[0-9]+([\.,][0-9]+)?">
+						<div>
+							<span class="mensagem" th:if="${#fields.hasErrors('valor')}"
+								th:errors="*{valor}"></span>
+						</div>
+					</div>
+
+					<button type="submit">Salvar</button>
+				</form>
+			</div>
+		</div>
+
+	</div>
+
+
+</body>
+
+</html>
