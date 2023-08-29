@@ -2,7 +2,9 @@ package com.confeccaosocorro.controleestoque.service;
 
 import java.util.List;
 
+import com.confeccaosocorro.controleestoque.model.Entrada;
 import com.confeccaosocorro.controleestoque.model.Movimento;
+import com.confeccaosocorro.controleestoque.model.Saida;
 /**
  * Service movimento para interações com banco de dados
  * 
@@ -29,11 +31,17 @@ public interface MovimentoService {
 	public Movimento obterMovimentoPorId(Integer id);
 	/**
 	 * 006 – cadastrar a entrada de um produto no estoque
+	 * @param movimento
+	 * @return
+	 */
+	public Entrada salvarEntrada(Entrada movimento);
+	
+	/**
 	 * 007 – cadastrar a saida de um produto no estoque
 	 * @param movimento
 	 * @return
 	 */
-	public Movimento salvarMovimento(Movimento movimento);
+	public Saida salvarSaida(Saida movimento);
 	/**012 – consulta que retorna um comparativo entre
 	 * entradas e saídas em um dia, mês ou ano.
 	 * @param filtro
@@ -41,6 +49,8 @@ public interface MovimentoService {
 	 * @return
 	 */
 	public List<Movimento> gerarRelatorioMovimentos(String filtro, Integer referencia);
+	
+	public Movimento salvarMovimento(Movimento movimento);
 
 
 }

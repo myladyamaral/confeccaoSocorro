@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.confeccaosocorro.controleestoque.model.Entrada;
 import com.confeccaosocorro.controleestoque.model.Movimento;
 import com.confeccaosocorro.controleestoque.model.Produto;
+import com.confeccaosocorro.controleestoque.model.Saida;
 import com.confeccaosocorro.controleestoque.service.MovimentoService;
 import com.confeccaosocorro.controleestoque.service.ProdutoService;
 import com.confeccaosocorro.controleestoque.tipo.ReferenciaEnum;
@@ -42,14 +44,13 @@ public class MovimentoController {
 	 * @return
 	 */
 	@GetMapping("/entrada")
-	public ModelAndView adicionarEntrada(Movimento entrada) {
-		ModelAndView model = new ModelAndView("movimento/cadastrar");
-		model.addObject("movimento", entrada);
+	public ModelAndView adicionarEntrada() {
+		ModelAndView model = new ModelAndView("movimento/entrada");
+		model.addObject("movimento", new Entrada());
 		
 		List<Produto> listaProdutos = produtoService.listarTodosProdutos();
 		model.addObject("produtos", listaProdutos);
-		
-		model.addObject("tituloPagina", "Nova Entrada");
+
 		tipoMovimento = TipoMovimentoEnum.ENTRADA.getId();
 		return model;
 	}
@@ -59,20 +60,27 @@ public class MovimentoController {
 	 * @return
 	 */
 	@GetMapping("/saida")
-	public ModelAndView adicionarSaida(Movimento saida) {
-		ModelAndView model = new ModelAndView("movimento/cadastrar");
-		model.addObject("movimento", saida);
+	public ModelAndView adicionarSaida() {
+		ModelAndView model = new ModelAndView("movimento/saida");
+		model.addObject("movimento", new Saida());
 		
 		List<Produto> listaProdutos = produtoService.listarTodosProdutos();
 		listaProdutos = listaProdutos.stream().filter(p->p.getTotalEstoque()>0).toList();
 		model.addObject("produtos", listaProdutos);
 		
-		model.addObject("tituloPagina", "Nova Saida");
 		tipoMovimento = TipoMovimentoEnum.SAIDA.getId();
 		return model;
 	}
-	@PostMapping("/cadastrar")
-	public ModelAndView salvarMovimento(@ModelAttribute("movimento")Movimento movimento) {
+	@PostMapping("/cadastrarEntrada")
+	public ModelAndView salvarEntrada(@ModelAttribute("movimento")Entrada movimento) {
+		movimento.setDataMovimento(new Date());
+		movimento.setEstorno(false);
+		movimentoService.salvarEntrada(movimento);
+		
+		return listarMovimentos();
+	}
+	@PostMapping("/cadastrarSaida")
+	public ModelAndView salvarMovimento(@ModelAttribute("movimento")Saida movimento) {
 		if(tipoMovimento.equals(TipoMovimentoEnum.SAIDA.getId())&&
 				movimento.getQuantidade()>movimento.getProduto().getTotalEstoque()) {
 			 ModelAndView model = new ModelAndView("redirect:/movimento/saida");
@@ -81,11 +89,10 @@ public class MovimentoController {
 		}
 		movimento.setDataMovimento(new Date());
 		movimento.setEstorno(false);
-		movimento.setTipoMovimento(tipoMovimento);
-			
-		movimentoService.salvarMovimento(movimento);
 		
-		return new ModelAndView("redirect:/movimento/listar");
+		movimentoService.salvarSaida(movimento);
+		
+		return listarMovimentos();
 	}
 	
     @GetMapping("/listar")
@@ -151,7 +158,9 @@ public class MovimentoController {
    		Integer total = entradas-saidas;
    		model.addObject("entradas", entradas);
    		model.addObject("saidas", saidas);	
-   		model.addObject("total", total);	
+   		model.addObject("total", total);
+   		model.addObject("cabecalho",ReferenciaEnum.getDescricaoPorId(filtroReferencia)+
+   				" de referencia: "+filtro);
 
    		return model;
    	}
@@ -164,23 +173,33 @@ public class MovimentoController {
     @GetMapping("/estornar/{id}")
    	public ModelAndView estornarMovimento(@PathVariable Integer id) {
    		
-   		Movimento movimento = movimentoService.obterMovimentoPorId(id);
-   		Movimento estorno = new Movimento();
-		estorno.setProduto(movimento.getProduto());
-		estorno.setQuantidade(movimento.getQuantidade());
-		estorno.setIdMovimentoEstornado(movimento.getId());
-		estorno.setDataMovimento(new Date());
-		estorno.setEstorno(false);
+   		Movimento movimento = movimentoService.obterMovimentoPorId(id);		
 		
-		movimento.setEstorno(true);
-   		if(movimento.getTipoMovimento() == TipoMovimentoEnum.ENTRADA.getId()) {
-   			estorno.setTipoMovimento(TipoMovimentoEnum.SAIDA.getId());	
+		
+   		if(movimento.getTipoMovimento().equals(TipoMovimentoEnum.ENTRADA.getId())) {
+   			Saida estorno = new Saida();
+   			estorno.setProduto(movimento.getProduto());
+   			estorno.setQuantidade(movimento.getQuantidade());
+   			estorno.setIdMovimentoEstornado(movimento.getId());
+   			estorno.setDataMovimento(new Date());
+   			estorno.setEstorno(false);
+
+   			movimentoService.salvarSaida(estorno);
    		}
    		else {
-   			estorno.setTipoMovimento(TipoMovimentoEnum.ENTRADA.getId());
+   			Entrada estorno = new Entrada();
+   			estorno.setProduto(movimento.getProduto());
+   			estorno.setQuantidade(movimento.getQuantidade());
+   			estorno.setIdMovimentoEstornado(movimento.getId());
+   			estorno.setDataMovimento(new Date());
+   			estorno.setEstorno(false);
+   			
+   			movimentoService.salvarEntrada(estorno);
    		}
-   		movimentoService.salvarMovimento(estorno);
-		movimentoService.salvarMovimento(movimento);
+   		
+   		movimento.setEstorno(true);
+   		movimentoService.salvarMovimento(movimento);
+   		
    		return listarMovimentos();
    	}
    

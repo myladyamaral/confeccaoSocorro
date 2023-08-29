@@ -26,14 +26,14 @@
 		<div class="row justify-content-md-center">
 			<div class="col-md-auto">
 				<header>
-					<h2 th:text="${tituloPagina}"></h2>
+					<h2>Nova Entrada</h2>
 					<div class="alert alert-success alert-dismissible fade show"
 						th:if="${mensagem}">
 						<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 						<span th:text="${mensagem}"></span>
 					</div>
 				</header>
-				<form action="#" th:action="@{/movimento/cadastrar}"
+				<form action="#" th:action="@{/movimento/cadastrarEntrada}"
 					th:object="${movimento}" method="post">
 					
 					<div class="form-group">

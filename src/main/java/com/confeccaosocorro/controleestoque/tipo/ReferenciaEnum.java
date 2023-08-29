@@ -26,7 +26,13 @@ public enum ReferenciaEnum {
 	public String getDescricao() {
 		return descricao;
 	}
-	
+	public static String getDescricaoPorId(Integer id) {
+		for (ReferenciaEnum tipo : values()) {
+			if(tipo.getId().equals(id))
+				return tipo.getDescricao();
+		}
+		return "";
+	}
 	public static List<ReferenciaEnum> getReferencias(){
 		List<ReferenciaEnum> tipos = new ArrayList<>();
 		for (ReferenciaEnum tipo : values()) {

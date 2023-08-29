@@ -4,25 +4,33 @@ package com.confeccaosocorro.controleestoque.model;
 import java.util.Date;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Entity
+@DiscriminatorColumn(name = "tipo_movimento")
 @Table(schema = "controleestoque", name = "movimento")
-public class Movimento {
+public abstract class Movimento {
+	
+	public final static String ENTRADA = "1";
+	public final static String SAIDA = "2";
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	@Column(name = "tipo_movimento")
+	@Column(name = "tipo_movimento", updatable = false, insertable = false)
 	private Integer tipoMovimento;
 	
 	@ManyToOne

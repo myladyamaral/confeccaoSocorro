@@ -8,7 +8,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.confeccaosocorro.controleestoque.model.Entrada;
 import com.confeccaosocorro.controleestoque.model.Movimento;
+import com.confeccaosocorro.controleestoque.model.Saida;
 import com.confeccaosocorro.controleestoque.repository.MovimentoRepository;
 import com.confeccaosocorro.controleestoque.tipo.ReferenciaEnum;
 
@@ -40,10 +42,17 @@ public class MovimentoServiceImpl implements MovimentoService {
 	}
 
 	@Override
+	public Entrada salvarEntrada(Entrada movimento) {
+		return movimentoRepository.saveAndFlush(movimento);
+	}
+	@Override
+	public Saida salvarSaida(Saida movimento) {
+		return movimentoRepository.saveAndFlush(movimento);
+	}
+	@Override
 	public Movimento salvarMovimento(Movimento movimento) {
 		return movimentoRepository.saveAndFlush(movimento);
 	}
-
 
 	@Override
 	public List<Movimento> buscarMovimentosComFiltros(String produto, String tipoMovimento, String dataEntrada, String dataSaida) {
@@ -110,5 +119,7 @@ public class MovimentoServiceImpl implements MovimentoService {
 		
 		return movimentos;
 	}
+
+	
 
 }
